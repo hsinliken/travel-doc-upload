@@ -134,12 +134,8 @@ export default function Home() {
         <h1 style={styles.title}>📸 旅遊證件上傳</h1>
         <p style={styles.subtitle}>請上傳您的護照或身分證件，系統將自動加密保護。</p>
 
-        {/* LINE 登入區塊 */}
-        {!lineUser ? (
-          <a href={lineLoginUrl} style={styles.lineLoginButton}>
-            <span style={styles.lineIcon}>💬</span> 用 LINE 快速登入
-          </a>
-        ) : (
+        {/* 如果已經用 LINE 登入，顯示歡迎訊息 */}
+        {lineUser && (
           <div style={styles.lineUserBox}>
             {lineUser.picture && (
               <img src={lineUser.picture} alt="" style={styles.lineAvatar} />
@@ -147,10 +143,6 @@ export default function Home() {
             <span>👋 {lineUser.name}，歡迎！</span>
           </div>
         )}
-
-        <div style={styles.orDivider}>
-          <span>或手動填寫</span>
-        </div>
         
         <form onSubmit={handleSubmit} style={styles.form}>
           
@@ -226,6 +218,16 @@ export default function Home() {
         <p style={styles.privacy}>
           🔒 您的資料將被加密處理，僅供本次簽證申請使用。
         </p>
+
+        {/* LINE 登入按鈕放在最下方 */}
+        {!lineUser && (
+          <>
+            <div style={styles.bottomDivider}></div>
+            <a href={lineLoginUrl} style={styles.lineLoginButtonBottom}>
+              💬 LINE 迅速回覆請點我
+            </a>
+          </>
+        )}
       </div>
     </div>
   );
@@ -261,23 +263,6 @@ const styles = {
     marginBottom: '25px',
     fontSize: '14px',
   },
-  lineLoginButton: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '10px',
-    background: '#06C755',
-    color: 'white',
-    padding: '14px',
-    borderRadius: '10px',
-    textDecoration: 'none',
-    fontSize: '16px',
-    fontWeight: '600',
-    marginBottom: '20px',
-  },
-  lineIcon: {
-    fontSize: '20px',
-  },
   lineUserBox: {
     display: 'flex',
     alignItems: 'center',
@@ -294,13 +279,6 @@ const styles = {
     width: '30px',
     height: '30px',
     borderRadius: '50%',
-  },
-  orDivider: {
-    display: 'flex',
-    alignItems: 'center',
-    margin: '20px 0',
-    color: '#999',
-    fontSize: '14px',
   },
   form: {
     display: 'flex',
@@ -358,6 +336,22 @@ const styles = {
     color: '#999',
     textAlign: 'center',
     marginTop: '20px',
+  },
+  bottomDivider: {
+    height: '1px',
+    background: '#eee',
+    margin: '25px 0 20px 0',
+  },
+  lineLoginButtonBottom: {
+    display: 'block',
+    textAlign: 'center',
+    background: '#06C755',
+    color: 'white',
+    padding: '14px',
+    borderRadius: '10px',
+    textDecoration: 'none',
+    fontSize: '16px',
+    fontWeight: '600',
   },
   // 成功畫面樣式
   successBox: {
