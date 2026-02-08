@@ -93,6 +93,7 @@ export default async function handler(req, res) {
 
     const file = files.file?.[0];
     const name = fields.name?.[0] || 'Unknown';
+    const phone = fields.phone?.[0] || 'NoPhone';
     const groupId = fields.groupId?.[0] || 'DEFAULT';
 
     if (!file) {
@@ -101,8 +102,8 @@ export default async function handler(req, res) {
 
     try {
       const originalPath = file.filepath;
-      // 檔名規則: 團號_姓名_時間戳.jpg
-      const filename = `${groupId}_${name}_${Date.now()}.jpg`;
+      // 檔名規則: 團號_姓名_電話_時間戳.jpg
+      const filename = `${groupId}_${name}_${phone}_${Date.now()}.jpg`;
       const outputPath = path.join(tmpDir, `watermarked_${filename}`);
 
       // 先讀取原圖的尺寸
