@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [groupId, setGroupId] = useState('2026-JP-001');
@@ -8,6 +10,36 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [message, setMessage] = useState('');
+  const [lineUser, setLineUser] = useState(null);
+
+  // LINE Login 回調處理
+  useEffect(() => {
+    const { lineUserId, lineName, linePicture, error } = router.query;
+    
+    if (error) {
+      setMessage('❌ LINE 登入失敗，請手動填寫資料');
+    }
+    
+    if (lineUserId && lineName) {
+      setLineUser({
+        userId: lineUserId,
+        name: lineName,
+        picture: linePicture,
+      });
+      setName(lineName); // 自動帶入姓名
+      
+      // 清除 URL 參數
+      router.replace('/', undefined, { shallow: true });
+    }
+  }, [router.query]);
+
+  // LINE Login URL
+  const lineLoginUrl = `https://access.line.me/oauth2/v2.1/authorize?` +
+    `response_type=code` +
+    `&client_id=${process.env.NEXT_PUBLIC_LINE_CHANNEL_ID || '2009075717'}` +
+    `&redirect_uri=${encodeURIComponent((process.env.NEXT_PUBLIC_BASE_URL || 'https://travel-doc-upload.vercel.app') + '/api/line-callback')}` +
+    `&state=upload` +
+    `&scope=profile%20openid`;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,6 +56,9 @@ export default function Home() {
     formData.append('phone', phone);
     formData.append('groupId', groupId);
     formData.append('file', file);
+    if (lineUser) {
+      formData.append('lineUserId', lineUser.userId);
+    }
 
     try {
       const res = await fetch('/api/upload', {
@@ -57,20 +92,29 @@ export default function Home() {
             我們已收到您的證件資料。
           </p>
           
-          <div style={styles.divider}></div>
-          
-          <p style={styles.linePrompt}>📱 連結 LINE 接收即時通知</p>
-          <a 
-            href="https://line.me/R/ti/p/@521unlhh" 
-            style={styles.lineButton}
-          >
-            加入官方 LINE
-          </a>
+          {!lineUser && (
+            <>
+              <div style={styles.divider}></div>
+              <p style={styles.linePrompt}>📱 連結 LINE 接收即時通知</p>
+              <a 
+                href="https://line.me/R/ti/p/@521unlhh" 
+                style={styles.lineButton}
+              >
+                加入官方 LINE
+              </a>
+            </>
+          )}
+
+          {lineUser && (
+            <p style={styles.lineConnected}>
+              ✅ 已透過 LINE 連結，我們會發送確認訊息給您！
+            </p>
+          )}
           
           <button 
             onClick={() => {
               setUploadSuccess(false);
-              setName('');
+              setName(lineUser?.name || '');
               setPhone('');
               setFile(null);
             }}
@@ -89,6 +133,24 @@ export default function Home() {
       <div style={styles.card}>
         <h1 style={styles.title}>📸 旅遊證件上傳</h1>
         <p style={styles.subtitle}>請上傳您的護照或身分證件，系統將自動加密保護。</p>
+
+        {/* LINE 登入區塊 */}
+        {!lineUser ? (
+          <a href={lineLoginUrl} style={styles.lineLoginButton}>
+            <span style={styles.lineIcon}>💬</span> 用 LINE 快速登入
+          </a>
+        ) : (
+          <div style={styles.lineUserBox}>
+            {lineUser.picture && (
+              <img src={lineUser.picture} alt="" style={styles.lineAvatar} />
+            )}
+            <span>👋 {lineUser.name}，歡迎！</span>
+          </div>
+        )}
+
+        <div style={styles.orDivider}>
+          <span>或手動填寫</span>
+        </div>
         
         <form onSubmit={handleSubmit} style={styles.form}>
           
@@ -110,7 +172,10 @@ export default function Home() {
               placeholder="請輸入真實姓名"
               value={name} 
               onChange={(e) => setName(e.target.value)}
-              style={styles.input}
+              style={{
+                ...styles.input,
+                backgroundColor: lineUser ? '#f0f9f0' : 'white',
+              }}
               required
             />
           </div>
@@ -193,7 +258,48 @@ const styles = {
   subtitle: {
     color: '#666',
     textAlign: 'center',
-    marginBottom: '30px',
+    marginBottom: '25px',
+    fontSize: '14px',
+  },
+  lineLoginButton: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    background: '#06C755',
+    color: 'white',
+    padding: '14px',
+    borderRadius: '10px',
+    textDecoration: 'none',
+    fontSize: '16px',
+    fontWeight: '600',
+    marginBottom: '20px',
+  },
+  lineIcon: {
+    fontSize: '20px',
+  },
+  lineUserBox: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    background: '#f0f9f0',
+    padding: '14px',
+    borderRadius: '10px',
+    marginBottom: '20px',
+    color: '#2e7d32',
+    fontWeight: '600',
+  },
+  lineAvatar: {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+  },
+  orDivider: {
+    display: 'flex',
+    alignItems: 'center',
+    margin: '20px 0',
+    color: '#999',
     fontSize: '14px',
   },
   form: {
@@ -296,6 +402,11 @@ const styles = {
     fontSize: '16px',
     fontWeight: '600',
     marginBottom: '15px',
+  },
+  lineConnected: {
+    color: '#2e7d32',
+    marginTop: '20px',
+    marginBottom: '20px',
   },
   resetButton: {
     background: 'transparent',
