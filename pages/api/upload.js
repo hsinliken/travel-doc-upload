@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import sharp from 'sharp';
 import { google } from 'googleapis';
+import os from 'os';
 
 // Next.js API config
 export const config = {
@@ -27,7 +28,7 @@ async function uploadToGoogleDrive(filePath, fileName, mimeType) {
   const response = await drive.files.create({
     requestBody: {
       name: fileName,
-      parents: [FOLDER_ID], // 上傳到指定資料夾
+      parents: [FOLDER_ID],
     },
     media: {
       mimeType: mimeType,
@@ -44,25 +45,24 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
 
+  // 使用系統暫存目錄 (/tmp on Vercel)
+  const tmpDir = os.tmpdir();
+
   const form = formidable({ 
-    uploadDir: './public/uploads', 
+    uploadDir: tmpDir,
     keepExtensions: true,
     maxFileSize: 10 * 1024 * 1024, 
   });
 
-  if (!fs.existsSync('./public/uploads')) {
-    fs.mkdirSync('./public/uploads', { recursive: true });
-  }
-
   form.parse(req, async (err, fields, files) => {
     if (err) {
       console.error('Upload Error:', err);
-      return res.status(500).json({ error: 'File upload failed' });
+      return res.status(500).json({ error: 'File upload failed: ' + err.message });
     }
 
     const file = files.file?.[0];
-    const name = fields.name?.[0];
-    const groupId = fields.groupId?.[0];
+    const name = fields.name?.[0] || 'Unknown';
+    const groupId = fields.groupId?.[0] || 'DEFAULT';
 
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -72,7 +72,7 @@ export default async function handler(req, res) {
       const originalPath = file.filepath;
       // 檔名規則: 團號_姓名_時間戳.jpg
       const filename = `${groupId}_${name}_${Date.now()}.jpg`;
-      const outputPath = path.join('./public/uploads', `watermarked_${filename}`);
+      const outputPath = path.join(tmpDir, `watermarked_${filename}`);
 
       // 浮水印設定
       const watermarkText = `僅供 XX 旅遊辦理簽證使用 ${new Date().toISOString().split('T')[0]}`;
@@ -98,7 +98,7 @@ export default async function handler(req, res) {
       const driveFile = await uploadToGoogleDrive(outputPath, filename, 'image/jpeg');
       console.log('✅ Google Drive Upload Success:', driveFile.webViewLink);
 
-      // 清除本地暫存檔 (只留雲端)
+      // 清除本地暫存檔
       try {
         if (fs.existsSync(originalPath)) fs.unlinkSync(originalPath);
         if (fs.existsSync(outputPath)) fs.unlinkSync(outputPath);
@@ -106,7 +106,7 @@ export default async function handler(req, res) {
         console.error('清除暫存檔失敗:', e);
       }
 
-      res.status(200).json({ 
+      return res.status(200).json({ 
         success: true, 
         message: 'File uploaded to Google Drive successfully',
         driveLink: driveFile.webViewLink 
@@ -114,7 +114,7 @@ export default async function handler(req, res) {
 
     } catch (error) {
       console.error('Processing Error:', error);
-      res.status(500).json({ error: 'Image processing or upload failed: ' + error.message });
+      return res.status(500).json({ error: 'Image processing or upload failed: ' + error.message });
     }
   });
 }
