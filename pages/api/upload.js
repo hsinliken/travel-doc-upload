@@ -40,6 +40,37 @@ async function uploadToGoogleDrive(filePath, fileName, mimeType) {
   return response.data;
 }
 
+// 產生浮水印 SVG (透明背景)
+function createWatermarkSvg(width, height, text) {
+  // 根據圖片寬度動態調整字體大小
+  const fontSize = Math.max(20, Math.floor(width / 25));
+  
+  return Buffer.from(`
+    <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .watermark { 
+            fill: rgba(255, 255, 255, 0.7); 
+            font-size: ${fontSize}px; 
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+          }
+          .watermark-shadow {
+            fill: rgba(0, 0, 0, 0.3);
+            font-size: ${fontSize}px;
+            font-family: Arial, sans-serif;
+            font-weight: bold;
+          }
+        </style>
+      </defs>
+      <!-- 陰影 (偏移 2px) -->
+      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="watermark-shadow" transform="translate(2, 2)">${text}</text>
+      <!-- 主文字 -->
+      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="watermark">${text}</text>
+    </svg>
+  `);
+}
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
@@ -74,23 +105,25 @@ export default async function handler(req, res) {
       const filename = `${groupId}_${name}_${Date.now()}.jpg`;
       const outputPath = path.join(tmpDir, `watermarked_${filename}`);
 
-      // 浮水印設定
-      const watermarkText = `僅供 XX 旅遊辦理簽證使用 ${new Date().toISOString().split('T')[0]}`;
-      const width = 800;
-      const svgImage = `
-        <svg width="${width}" height="200">
-          <style>
-            .title { fill: rgba(255, 255, 255, 0.5); font-size: 40px; font-weight: bold; }
-          </style>
-          <text x="50%" y="50%" text-anchor="middle" class="title">${watermarkText}</text>
-        </svg>
-      `;
-      const svgBuffer = Buffer.from(svgImage);
+      // 先讀取原圖的尺寸
+      const metadata = await sharp(originalPath).metadata();
+      const imgWidth = metadata.width || 800;
+      const imgHeight = metadata.height || 600;
 
-      // 影像處理
+      // 浮水印文字
+      const watermarkText = `僅供 XX 旅遊辦理簽證使用 ${new Date().toISOString().split('T')[0]}`;
+      
+      // 產生與原圖同尺寸的透明浮水印
+      const watermarkSvg = createWatermarkSvg(imgWidth, imgHeight, watermarkText);
+
+      // 影像處理：縮放 + 疊加浮水印
       await sharp(originalPath)
-        .resize({ width: 800 })
-        .composite([{ input: svgBuffer, gravity: 'center', blend: 'over' }])
+        .resize({ width: 800, withoutEnlargement: true })
+        .composite([{ 
+          input: await sharp(watermarkSvg).resize(800).png().toBuffer(),
+          gravity: 'center',
+        }])
+        .jpeg({ quality: 85 })
         .toFile(outputPath);
 
       // 上傳到 Google Drive
