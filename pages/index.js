@@ -389,8 +389,7 @@ export default function Home() {
               )}
               <input 
                 type="file" 
-                accept="image/*" 
-                capture="environment"
+                accept="image/*,.pdf"
                 onChange={(e) => setFile(e.target.files[0])}
                 style={{ display: 'none' }}
               />
