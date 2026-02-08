@@ -18,6 +18,9 @@ const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 const FOLDER_ID = process.env.GOOGLE_FOLDER_ID;
 
+// LINE Messaging API
+const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+
 // 設定 OAuth2 Client
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, 'https://developers.google.com/oauthplayground');
 oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
@@ -95,6 +98,7 @@ export default async function handler(req, res) {
     const name = fields.name?.[0] || 'Unknown';
     const phone = fields.phone?.[0] || 'NoPhone';
     const groupId = fields.groupId?.[0] || 'DEFAULT';
+    const lineUserId = fields.lineUserId?.[0] || null;
 
     if (!file) {
       return res.status(400).json({ error: 'No file uploaded' });
@@ -131,6 +135,38 @@ export default async function handler(req, res) {
       console.log('正在上傳到 Google Drive...');
       const driveFile = await uploadToGoogleDrive(outputPath, filename, 'image/jpeg');
       console.log('✅ Google Drive Upload Success:', driveFile.webViewLink);
+
+      // 如果有 LINE User ID，發送確認訊息
+      if (lineUserId && LINE_CHANNEL_ACCESS_TOKEN) {
+        try {
+          console.log('正在發送 LINE 訊息給:', lineUserId);
+          const lineResponse = await fetch('https://api.line.me/v2/bot/message/push', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${LINE_CHANNEL_ACCESS_TOKEN}`,
+            },
+            body: JSON.stringify({
+              to: lineUserId,
+              messages: [
+                {
+                  type: 'text',
+                  text: `✅ ${name} 您好！\n\n您的證件已上傳成功！\n\n📋 團號：${groupId}\n📱 電話：${phone}\n⏰ 時間：${new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' })}\n\n如有任何問題，請隨時與我們聯繫。感謝您的配合！🙏`,
+                },
+              ],
+            }),
+          });
+          
+          if (lineResponse.ok) {
+            console.log('✅ LINE 訊息發送成功');
+          } else {
+            const lineError = await lineResponse.json();
+            console.error('LINE 訊息發送失敗:', lineError);
+          }
+        } catch (lineErr) {
+          console.error('LINE 發送錯誤:', lineErr);
+        }
+      }
 
       // 清除本地暫存檔
       try {
