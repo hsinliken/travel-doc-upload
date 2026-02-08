@@ -30,7 +30,7 @@ export default function Home() {
         setMessage('✅ 上傳成功！請稍候...');
         // 模擬跳轉至官方 LINE
         setTimeout(() => {
-          window.location.href = 'https://line.me/R/ti/p/@your_line_id'; 
+          window.location.href = 'https://line.me/R/ti/p/@521unlhh'; 
         }, 2000);
       } else {
         setMessage('❌ 上傳失敗，請重試。');
