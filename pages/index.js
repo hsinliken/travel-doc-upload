@@ -5,11 +5,7 @@ import { useRouter } from 'next/router';
 const translations = {
   'zh-TW': {
     title: '📸 旅遊證件上傳',
-    subtitle: '請選擇您的登入方式',
-    lineLogin: 'LINE 一鍵登入上傳 (推薦)',
-    manualLogin: '手動輸入資料上傳',
-    or: '或是',
-    back: '⬅️ 返回',
+    subtitle: '請上傳您的護照或身分證件，系統將自動加密保護。',
     groupId: '團號 (Group ID)',
     groupIdPlaceholder: '例如：2026-JP-001',
     name: '姓名 *',
@@ -23,21 +19,17 @@ const translations = {
     privacy: '🔒 您的資料將被加密保護，僅供本次簽證申請使用。',
     successTitle: '上傳成功！',
     successText: '您好，我們已收到您的證件資料。',
+    linePrompt: '📱 連結 LINE 接收即時通知',
+    addLine: '加入官方 LINE',
     uploadAnother: '上傳另一份證件',
-    welcome: '歡迎！',
     fillAllFields: '請填寫所有欄位並選擇檔案！',
     uploadSuccess: '✅ 證件上傳成功！',
     uploadFailed: '❌ 上傳失敗：',
     error: '❌ 發生錯誤：',
-    lineLoginFailed: '❌ LINE 登入失敗，請手動填寫資料',
   },
   'zh-CN': {
     title: '📸 旅游证件上传',
-    subtitle: '请选择您的登入方式',
-    lineLogin: 'LINE 一键登入上传 (推荐)',
-    manualLogin: '手动输入资料上传',
-    or: '或是',
-    back: '⬅️ 返回',
+    subtitle: '请上传您的护照或身份证件，系统将自动加密保护。',
     groupId: '团号 (Group ID)',
     groupIdPlaceholder: '例如：2026-JP-001',
     name: '姓名 *',
@@ -51,21 +43,17 @@ const translations = {
     privacy: '🔒 您的资料将被加密保护，仅供本次签证申请使用。',
     successTitle: '上传成功！',
     successText: '您好，我们已收到您的证件资料。',
+    linePrompt: '📱 连结 LINE 接收即时通知',
+    addLine: '加入官方 LINE',
     uploadAnother: '上传另一份证件',
-    welcome: '欢迎！',
     fillAllFields: '请填写所有栏位并选择文件！',
     uploadSuccess: '✅ 证件上传成功！',
     uploadFailed: '❌ 上传失败：',
     error: '❌ 发生错误：',
-    lineLoginFailed: '❌ LINE 登入失败，请手动填写资料',
   },
   'en': {
     title: '📸 Travel Document Upload',
-    subtitle: 'Please choose login method',
-    lineLogin: 'Login with LINE (Recommended)',
-    manualLogin: 'Upload Manually',
-    or: 'OR',
-    back: '⬅️ Back',
+    subtitle: 'Please upload your passport or ID.',
     groupId: 'Group ID',
     groupIdPlaceholder: 'e.g., 2026-JP-001',
     name: 'Full Name *',
@@ -79,21 +67,17 @@ const translations = {
     privacy: '🔒 Your data is encrypted and used only for this visa application.',
     successTitle: 'Upload Successful!',
     successText: 'Hello, we have received your document.',
+    linePrompt: '📱 Connect LINE for instant notifications',
+    addLine: 'Add Official LINE',
     uploadAnother: 'Upload another document',
-    welcome: 'Welcome!',
     fillAllFields: 'Please fill all fields and select a file!',
     uploadSuccess: '✅ Document uploaded successfully!',
     uploadFailed: '❌ Upload failed: ',
     error: '❌ Error: ',
-    lineLoginFailed: '❌ LINE login failed. Please fill in manually.',
   },
   'ja': {
     title: '📸 渡航書類アップロード',
-    subtitle: 'ログイン方法を選択してください',
-    lineLogin: 'LINEでログイン (推奨)',
-    manualLogin: '手動でアップロード',
-    or: 'または',
-    back: '⬅️ 戻る',
+    subtitle: 'パスポートまたは身分証明書をアップロードしてください。',
     groupId: 'グループID',
     groupIdPlaceholder: '例：2026-JP-001',
     name: '氏名 *',
@@ -107,21 +91,17 @@ const translations = {
     privacy: '🔒 お客様のデータは暗号化され、ビザ申請にのみ使用されます。',
     successTitle: 'アップロード成功！',
     successText: 'お客様の書類を受け取りました。',
+    linePrompt: '📱 LINEを連携して通知を受け取る',
+    addLine: '公式LINEを追加',
     uploadAnother: '別の書類をアップロード',
-    welcome: 'ようこそ！',
     fillAllFields: 'すべての項目を入力し、ファイルを選択してください！',
     uploadSuccess: '✅ 書類のアップロードに成功しました！',
     uploadFailed: '❌ アップロード失敗：',
     error: '❌ エラー：',
-    lineLoginFailed: '❌ LINEログイン失敗。手動で入力してください。',
   },
   'ko': {
     title: '📸 여행 서류 업로드',
-    subtitle: '로그인 방식을 선택하세요',
-    lineLogin: 'LINE 로그인 (권장)',
-    manualLogin: '수동 업로드',
-    or: '또는',
-    back: '⬅️ 뒤로',
+    subtitle: '여권 또는 신분증을 업로드해 주세요.',
     groupId: '그룹 ID',
     groupIdPlaceholder: '예: 2026-JP-001',
     name: '이름 *',
@@ -135,13 +115,13 @@ const translations = {
     privacy: '🔒 귀하의 데이터는 암호화되어 비자 신청에만 사용됩니다.',
     successTitle: '업로드 성공!',
     successText: '서류를 접수했습니다.',
+    linePrompt: '📱 LINE 연결하여 알림 받기',
+    addLine: '공식 LINE 추가',
     uploadAnother: '다른 서류 업로드',
-    welcome: '환영합니다!',
     fillAllFields: '모든 항목을 입력하고 파일을 선택해 주세요!',
     uploadSuccess: '✅ 서류가 성공적으로 업로드되었습니다!',
     uploadFailed: '❌ 업로드 실패: ',
     error: '❌ 오류: ',
-    lineLoginFailed: '❌ LINE 로그인 실패. 수동으로 입력해 주세요.',
   },
 };
 
@@ -157,15 +137,13 @@ export default function Home() {
   const router = useRouter();
   const [lang, setLang] = useState('zh-TW');
   const [showLangMenu, setShowLangMenu] = useState(false);
-  const [mode, setMode] = useState('landing'); // 'landing', 'form', 'success'
-  const [loginMethod, setLoginMethod] = useState(null); // 'line', 'manual'
+  const [mode, setMode] = useState('form'); // 預設直接進入表單 (最自然)
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [groupId, setGroupId] = useState('2026-JP-001');
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [lineUser, setLineUser] = useState(null);
 
   const t = translations[lang] || translations['zh-TW'];
 
@@ -184,41 +162,6 @@ export default function Home() {
     setShowLangMenu(false);
   };
 
-  // LINE Login 回調處理
-  useEffect(() => {
-    const { lineUserId, lineName, linePicture, error } = router.query;
-    
-    if (error) {
-      setMessage(t.lineLoginFailed);
-      setMode('landing');
-    }
-    
-    if (lineUserId && lineName) {
-      setLineUser({
-        userId: lineUserId,
-        name: lineName,
-        picture: linePicture,
-      });
-      setName(lineName); // 自動帶入 LINE 暱稱
-      setLoginMethod('line');
-      setMode('form'); // 直接進入表單
-      router.replace('/', undefined, { shallow: true });
-    }
-  }, [router.query]);
-
-  // LINE Login URL
-  const lineLoginUrl = `https://access.line.me/oauth2/v2.1/authorize?` +
-    `response_type=code` +
-    `&client_id=${process.env.NEXT_PUBLIC_LINE_CHANNEL_ID || '2009075717'}` +
-    `&redirect_uri=${encodeURIComponent((process.env.NEXT_PUBLIC_BASE_URL || 'https://travel-doc-upload.vercel.app') + '/api/line-callback')}` +
-    `&state=upload` +
-    `&scope=profile%20openid`;
-
-  const handleManualLogin = () => {
-    setLoginMethod('manual');
-    setMode('form');
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file || !name || !phone) {
@@ -234,10 +177,6 @@ export default function Home() {
     formData.append('phone', phone);
     formData.append('groupId', groupId);
     formData.append('file', file);
-    // 只有 LINE 登入才帶 UserId
-    if (lineUser && loginMethod === 'line') {
-      formData.append('lineUserId', lineUser.userId);
-    }
 
     try {
       const res = await fetch('/api/upload', {
@@ -290,7 +229,7 @@ export default function Home() {
     </div>
   );
 
-  // 成功畫面
+  // 成功畫面 (這裡引導加入 LINE)
   if (mode === 'success') {
     return (
       <div style={styles.container}>
@@ -302,18 +241,23 @@ export default function Home() {
             {name} {t.successText}
           </p>
           
-          {loginMethod === 'line' && (
-            <p style={styles.lineConnected}>✅ LINE 通知已發送！</p>
-          )}
-
+          <div style={styles.divider}></div>
+          <p style={styles.linePrompt}>{t.linePrompt}</p>
+          <a 
+            href="https://line.me/R/ti/p/@521unlhh" 
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.lineButton}
+          >
+            {t.addLine}
+          </a>
+          
           <button 
             onClick={() => {
-              setMode('landing'); // 回到首頁重新選擇
+              setMode('form'); // 回到表單
               setName('');
               setPhone('');
               setFile(null);
-              setLineUser(null);
-              setLoginMethod(null);
             }}
             style={styles.resetButton}
           >
@@ -324,126 +268,86 @@ export default function Home() {
     );
   }
 
-  // 上傳表單
-  if (mode === 'form') {
-    return (
-      <div style={styles.container}>
-        <div style={styles.card}>
-          <button onClick={() => setMode('landing')} style={styles.backButton}>{t.back}</button>
-          
-          <LanguageSelector />
-          
-          <h1 style={styles.title}>{t.title}</h1>
-          
-          {loginMethod === 'line' && lineUser && (
-            <div style={styles.lineUserBox}>
-              {lineUser.picture && (
-                <img src={lineUser.picture} alt="" style={styles.lineAvatar} />
-              )}
-              <span>👋 {lineUser.name}，{t.welcome}</span>
-            </div>
-          )}
-          
-          <form onSubmit={handleSubmit} style={styles.form}>
-            
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>{t.groupId}</label>
-              <input 
-                type="text" 
-                value={groupId} 
-                onChange={(e) => setGroupId(e.target.value)}
-                style={styles.input}
-                placeholder={t.groupIdPlaceholder}
-              />
-            </div>
-
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>{t.name}</label>
-              <input 
-                type="text" 
-                placeholder={t.namePlaceholder}
-                value={name} 
-                onChange={(e) => setName(e.target.value)}
-                style={{
-                  ...styles.input,
-                  backgroundColor: loginMethod === 'line' ? '#f0f9f0' : 'white',
-                }}
-                required
-              />
-            </div>
-
-            <div style={styles.inputGroup}>
-              <label style={styles.label}>{t.phone}</label>
-              <input 
-                type="tel" 
-                placeholder={t.phonePlaceholder}
-                value={phone} 
-                onChange={(e) => setPhone(e.target.value)}
-                style={styles.input}
-                required
-              />
-            </div>
-
-            <div style={styles.uploadBox}>
-              <label style={styles.uploadLabel}>
-                {file ? (
-                  <span>{t.fileSelected}{file.name}</span>
-                ) : (
-                  <span>{t.selectFile}</span>
-                )}
-                <input 
-                  type="file" 
-                  accept="image/*,.pdf"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  style={{ display: 'none' }}
-                />
-              </label>
-            </div>
-
-            <button 
-              type="submit" 
-              disabled={loading}
-              style={{
-                ...styles.submitButton,
-                background: loading ? '#ccc' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              }}
-            >
-              {loading ? t.processing : t.submit}
-            </button>
-
-            {message && <p style={styles.message}>{message}</p>}
-          </form>
-
-          <p style={styles.privacy}>{t.privacy}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // 預設 Landing Page
+  // 上傳表單 (預設畫面)
   return (
     <div style={styles.container}>
       <div style={styles.card}>
         <LanguageSelector />
-
-        <h1 style={styles.title}><br/>{t.title}</h1>
+        
+        <h1 style={styles.title}>{t.title}</h1>
         <p style={styles.subtitle}>{t.subtitle}</p>
-
-        <div style={styles.buttonGroup}>
-          <a href={lineLoginUrl} style={styles.lineLoginButtonBig}>
-            <span style={{fontSize: '24px', marginRight: '10px'}}>💬</span>
-            {t.lineLogin}
-          </a>
+        
+        <form onSubmit={handleSubmit} style={styles.form}>
           
-          <div style={styles.dividerText}>{t.or}</div>
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>{t.groupId}</label>
+            <input 
+              type="text" 
+              value={groupId} 
+              onChange={(e) => setGroupId(e.target.value)}
+              style={styles.input}
+              placeholder={t.groupIdPlaceholder}
+            />
+          </div>
 
-          <button onClick={handleManualLogin} style={styles.manualLoginButton}>
-            ✍️ {t.manualLogin}
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>{t.name}</label>
+            <input 
+              type="text" 
+              placeholder={t.namePlaceholder}
+              value={name} 
+              onChange={(e) => setName(e.target.value)}
+              style={styles.input}
+              required
+            />
+          </div>
+
+          <div style={styles.inputGroup}>
+            <label style={styles.label}>{t.phone}</label>
+            <input 
+              type="tel" 
+              placeholder={t.phonePlaceholder}
+              value={phone} 
+              onChange={(e) => setPhone(e.target.value)}
+              style={styles.input}
+              required
+            />
+          </div>
+
+          <div style={styles.uploadBox}>
+            <label style={styles.uploadLabel}>
+              {file ? (
+                <span>{t.fileSelected}{file.name}</span>
+              ) : (
+                <span>{t.selectFile}</span>
+              )}
+              <input 
+                type="file" 
+                accept="image/*,.pdf"
+                onChange={(e) => setFile(e.target.files[0])}
+                style={{ display: 'none' }}
+              />
+            </label>
+          </div>
+
+          <button 
+            type="submit" 
+            disabled={loading}
+            style={{
+              ...styles.submitButton,
+              background: loading ? '#ccc' : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+            }}
+          >
+            {loading ? t.processing : t.submit}
           </button>
-        </div>
+
+          {message && <p style={styles.message}>{message}</p>}
+        </form>
+
+        <p style={styles.privacy}>{t.privacy}</p>
 
         {/* 員工後台入口 */}
-        <div style={{marginTop: '40px', textAlign: 'center'}}>
+        <div style={{marginTop: '20px', textAlign: 'center'}}>
           <a href="/admin" style={{fontSize: '12px', color: '#bbb', textDecoration: 'none'}}>
             🔒 員工專區
           </a>
@@ -471,7 +375,7 @@ const styles = {
     width: '100%',
     boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
     position: 'relative',
-    textAlign: 'center', // 讓 Landing Page 置中
+    textAlign: 'center',
   },
   langContainer: {
     position: 'absolute',
@@ -522,28 +426,11 @@ const styles = {
     marginBottom: '25px',
     fontSize: '14px',
   },
-  lineUserBox: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    gap: '10px',
-    background: '#f0f9f0',
-    padding: '14px',
-    borderRadius: '10px',
-    marginBottom: '20px',
-    color: '#2e7d32',
-    fontWeight: '600',
-  },
-  lineAvatar: {
-    width: '30px',
-    height: '30px',
-    borderRadius: '50%',
-  },
   form: {
     display: 'flex',
     flexDirection: 'column',
     gap: '20px',
-    textAlign: 'left', // 表單左對齊
+    textAlign: 'left',
   },
   inputGroup: {
     display: 'flex',
@@ -597,53 +484,6 @@ const styles = {
     textAlign: 'center',
     marginTop: '20px',
   },
-  buttonGroup: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '15px',
-    marginTop: '30px',
-  },
-  lineLoginButtonBig: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: '#06C755',
-    color: 'white',
-    padding: '18px',
-    borderRadius: '12px',
-    textDecoration: 'none',
-    fontSize: '18px',
-    fontWeight: 'bold',
-    boxShadow: '0 4px 12px rgba(6, 199, 85, 0.3)',
-    transition: 'transform 0.2s',
-  },
-  manualLoginButton: {
-    background: '#f5f5f5',
-    color: '#666',
-    border: '2px solid #ddd',
-    padding: '16px',
-    borderRadius: '12px',
-    fontSize: '16px',
-    fontWeight: '600',
-    cursor: 'pointer',
-    transition: 'background 0.2s',
-  },
-  dividerText: {
-    color: '#aaa',
-    fontSize: '14px',
-    margin: '10px 0',
-  },
-  backButton: {
-    position: 'absolute',
-    top: '20px',
-    left: '20px',
-    background: 'transparent',
-    border: 'none',
-    color: '#666',
-    cursor: 'pointer',
-    fontSize: '16px',
-    zIndex: 10,
-  },
   successBox: {
     background: 'white',
     borderRadius: '20px',
@@ -668,10 +508,25 @@ const styles = {
     fontSize: '16px',
     lineHeight: '1.6',
   },
-  lineConnected: {
-    color: '#2e7d32',
-    marginTop: '20px',
-    fontWeight: 'bold',
+  divider: {
+    height: '1px',
+    background: '#eee',
+    margin: '30px 0',
+  },
+  linePrompt: {
+    color: '#666',
+    marginBottom: '15px',
+  },
+  lineButton: {
+    display: 'block',
+    background: '#06C755',
+    color: 'white',
+    padding: '14px 30px',
+    borderRadius: '10px',
+    textDecoration: 'none',
+    fontSize: '16px',
+    fontWeight: '600',
+    marginBottom: '15px',
   },
   resetButton: {
     background: 'transparent',
