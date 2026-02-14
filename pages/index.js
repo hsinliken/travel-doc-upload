@@ -162,6 +162,15 @@ export default function Home() {
     setShowLangMenu(false);
   };
 
+  // LINE Login URL (重新加入)
+  const lineLoginUrl = `https://access.line.me/oauth2/v2.1/authorize?` +
+    `response_type=code` +
+    `&client_id=${process.env.NEXT_PUBLIC_LINE_CHANNEL_ID || '2009075717'}` +
+    `&redirect_uri=${encodeURIComponent((process.env.NEXT_PUBLIC_BASE_URL || 'https://travel-doc-upload.vercel.app') + '/api/line-callback')}` +
+    `&state=upload` +
+    `&scope=profile%20openid` +
+    `&bot_prompt=aggressive`; // 自動加入好友
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!file || !name || !phone) {
