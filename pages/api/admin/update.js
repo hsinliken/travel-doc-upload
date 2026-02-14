@@ -24,10 +24,11 @@ export default async function handler(req, res) {
   try {
     const sheets = google.sheets({ version: 'v4', auth: oauth2Client });
     
-    // 批次更新 (Batch Update)
-    // 欄位 G: 狀態 (已處理), H: 用途, I: 申請日期
     const data = ids.map(id => ({
-      range: `Sheet1!G${id + 1}:I${id + 1}`, // Row Index + 1 (1-based)
+      // id 已經是 1-based (從 1 開始)
+      // 如果 id = 1，代表第一筆資料，也就是 Row 2 (因為 Row 1 是 Header)
+      // 所以 Row Number = id + 1
+      range: `Sheet1!G${id + 1}:I${id + 1}`, 
       values: [['已處理', purpose, applyDate]],
     }));
 

@@ -24,7 +24,8 @@ export default async function handler(req, res) {
     // 讀取 Sheet1!A:I 的資料
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SHEET_ID,
-      range: 'Sheet1!A:I',
+      // 改從 A2 開始讀取 (跳過 A1 表頭)
+      range: 'Sheet1!A2:I',
     });
 
     const rows = response.data.values || [];
@@ -32,7 +33,9 @@ export default async function handler(req, res) {
     // 解析資料為 JSON 陣列
     // 欄位順序: 時間, 團號, 姓名, 電話, LINE_ID, 檔案連結, 狀態, 用途, 申請日期
     const data = rows.map((row, index) => ({
-      id: index, // Row Index
+      // 從 Row 2 開始讀取，所以第一筆資料的 ID = 1
+      // 在 Google Sheet 中，這筆資料位於 Row 2 (1 + 1)
+      id: index + 1,
       time: row[0],
       groupId: row[1],
       name: row[2],
