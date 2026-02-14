@@ -232,6 +232,9 @@ export default function Home() {
     try {
       const res = await fetch('/api/upload', {
         method: 'POST',
+        headers: {
+          'x-api-key': process.env.NEXT_PUBLIC_API_SECRET_KEY || 'default-secret-key',
+        },
         body: formData,
       });
 
