@@ -244,9 +244,7 @@ export default function Home() {
           <div style={styles.divider}></div>
           <p style={styles.linePrompt}>{t.linePrompt}</p>
           <a 
-            href="https://line.me/R/ti/p/@521unlhh" 
-            target="_blank"
-            rel="noopener noreferrer"
+            href={lineLoginUrl}
             style={styles.lineButton}
           >
             {t.addLine}
