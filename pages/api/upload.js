@@ -17,6 +17,7 @@ const CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 const REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN;
 const FOLDER_ID = process.env.GOOGLE_FOLDER_ID;
+const SHEET_ID = process.env.GOOGLE_SHEET_ID; // 新增 Sheet ID
 
 // LINE Messaging API
 const LINE_CHANNEL_ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
@@ -26,6 +27,37 @@ const API_SECRET_KEY = process.env.API_SECRET_KEY || 'default-secret-key';
 // 設定 OAuth2 Client
 const oauth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, 'https://developers.google.com/oauthplayground');
 oauth2Client.setCredentials({ refresh_token: REFRESH_TOKEN });
+
+// 寫入 Google Sheets (Database)
+async function appendToGoogleSheet(data) {
+  const sheets = google.sheets({ version: 'v4', auth: oauth2Client });
+  
+  // 欄位順序: 時間, 團號, 姓名, 電話, LINE_ID, 檔案連結, 狀態
+  const values = [[
+    new Date().toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }), // A: 時間
+    data.groupId,    // B: 團號
+    data.name,       // C: 姓名
+    data.phone,      // D: 電話
+    data.lineUserId || '', // E: LINE ID
+    data.fileLink,   // F: 檔案連結
+    '待處理',        // G: 狀態
+    '',              // H: 用途 (後台填寫)
+    '',              // I: 申請日期 (後台填寫)
+  ]];
+
+  try {
+    await sheets.spreadsheets.values.append({
+      spreadsheetId: SHEET_ID,
+      range: 'Sheet1!A:I', // 假設工作表名稱為 Sheet1
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values },
+    });
+    console.log('✅ Google Sheet Update Success');
+  } catch (err) {
+    console.error('❌ Google Sheet Update Failed:', err);
+    // 不拋出錯誤，避免影響前端顯示成功
+  }
+}
 
 // 使用 Buffer 直接上傳 (不落地)
 async function uploadBufferToGoogleDrive(buffer, fileName, mimeType) {
@@ -154,7 +186,20 @@ export default async function handler(req, res) {
       const driveFile = await uploadBufferToGoogleDrive(processedBuffer, filename, 'image/jpeg');
       console.log('✅ Google Drive Upload Success:', driveFile.webViewLink);
 
-      // 4. LINE 通知 (錯誤處理強化)
+      // 4. 更新資料庫 (Google Sheets)
+      try {
+        await appendToGoogleSheet({
+          groupId: groupId,
+          name: name,
+          phone: phone,
+          lineUserId: lineUserId,
+          fileLink: driveFile.webViewLink,
+        });
+      } catch (dbErr) {
+        console.error('Database Update Failed:', dbErr);
+      }
+
+      // 5. LINE 通知 (錯誤處理強化)
       if (lineUserId && LINE_CHANNEL_ACCESS_TOKEN) {
         try {
           console.log('正在發送 LINE 訊息給:', lineUserId);
